@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class Book{
-    static int id;
+    int id;
     int count;
     String name;
     ArrayList<Scholar> rentHistory;
@@ -31,10 +31,10 @@ class Book{
 
 
 class Scholar{
-    static int id=1;
+    int id=1;
     String name, course;
     Scholar(int id, String name, String course){
-        Scholar.id = id;
+        this.id = id;
         this.name = name;
         this.course = course;
     }
@@ -76,30 +76,57 @@ class Library{
             for(Scholar stud : book.rentHistory){
                 System.out.println("Name: "+stud.name+",Course: "+stud.course);
             }
-            System.out.println("********************");
+            System.out.println();
         }
     }
 
+
+
 }
 public class LMS {
+
+    static Scholar checkStudent(ArrayList<Scholar> list, int id){
+        for(Scholar scholar : list){
+            if(scholar.id==id){return scholar;}
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
-        Book[] bookList = new Book[n];
-        System.out.println("Enter Name, number of books and category: ");
+        ArrayList<Book> bookList = new ArrayList<>();
+        System.out.println("nEnter Name, number of books and category: ");
         for(int i=0; i<n; i++){
-            bookList[i] = new Book(Book.id, scanner.next(), scanner.nextInt(), scanner.next());
+            bookList.add(new Book(i+1, scanner.next(), scanner.nextInt(), scanner.next()));
         }
-        Scholar student = new Scholar(1,"Deepak",  "Khattar");
-        Scholar student2 = new Scholar(2, "Deepak", "Kumar");
-        bookList[0].rentOut(student);
-        bookList[1].rentOut(student2);
-        for(Book book : bookList){
-            for(Scholar scholar : book.rentHistory){
-                System.out.println(book.name + "\t" + scholar.name+"\t"+ scholar.course);
-                System.out.println("*********************************");
+        System.out.println("Enter number of students: ");
+        n = scanner.nextInt();
+        ArrayList<Scholar> scholarList = new ArrayList<>();
+        System.out.println("Enter Name and Course: ");
+        for(int i=0; i<n;i++){
+            scholarList.add(new Scholar(i+1, scanner.next(), scanner.next()));
+        }
+        System.out.println("Student List : ");
+        for(Scholar scholar : scholarList){
+            System.out.println(scholar.id + "\t" + scholar.name+"\t"+scholar.course);
+        }
+        Library library = new Library(bookList);
+        System.out.println("Enter number of rentals : ");
+        int x = scanner.nextInt();
+        for(int i=0; i<x; i++){
+            System.out.println("Enter book id and student id : ");
+            int bookId = scanner.nextInt();
+            int studentId = scanner.nextInt();
+
+            for(Scholar stud : scholarList){
+                if(stud.id==studentId){
+                    library.rentOut(bookId,stud );
+                    break;
+                }
             }
         }
-
+        System.out.println("DISPLAY RECORDS!");
+        library.displayRecords();
     }
 }
